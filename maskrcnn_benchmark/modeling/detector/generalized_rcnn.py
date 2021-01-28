@@ -27,8 +27,8 @@ class GeneralizedRCNN(nn.Module):
         super(GeneralizedRCNN, self).__init__()
 
         self.backbone = build_backbone(cfg)
-        self.rpn = build_rpn(cfg, self.backbone.out_channels)
-        self.roi_heads = build_roi_heads(cfg, self.backbone.out_channels)
+        self.rpn = build_rpn(cfg, self.backbone.out_channels)  ##self.rpn为build_rpn中的RPNModule(cfg, in_channels)
+        self.roi_heads = build_roi_heads(cfg, self.backbone.out_channels)  ##self.roi_heads为build_roi_heads中的CombinedROIHeads(cfg, roi_heads)
 
     def forward(self, images, targets=None):
         """
@@ -47,8 +47,12 @@ class GeneralizedRCNN(nn.Module):
             raise ValueError("In training mode, targets should be passed")
         images = to_image_list(images)
         features = self.backbone(images.tensors)
+        ##self.rpn为build_rpn中的RPNModule(cfg, in_channels)
+        ##RPNModule返回boxes, losses
         proposals, proposal_losses = self.rpn(images, features, targets)
         if self.roi_heads:
+            ##self.roi_heads为build_roi_heads中的CombinedROIHeads(cfg, roi_heads)
+            ##CombinedROIHeads返回x, detections, losses
             x, result, detector_losses = self.roi_heads(features, proposals, targets)
         else:
             # RPN-only models don't have roi_heads
