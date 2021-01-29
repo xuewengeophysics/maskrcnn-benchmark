@@ -1,0 +1,360 @@
+2021-01-29 17:47:38,281 maskrcnn_benchmark INFO: Using 1 GPUs
+2021-01-29 17:47:38,281 maskrcnn_benchmark INFO: Namespace(config_file='configs/e2e_keypoint_rcnn_R_50_FPN_1x_train2017.yaml', distributed=False, local_rank=0, opts=[], skip_test=False)
+2021-01-29 17:47:38,282 maskrcnn_benchmark INFO: Collecting env info (might take some time)
+2021-01-29 17:47:40,435 maskrcnn_benchmark INFO: 
+PyTorch version: 1.4.0
+Is debug build: No
+CUDA used to build PyTorch: 10.1
+
+OS: Linux Mint 20.1
+GCC version: (Ubuntu 10.2.0-5ubuntu1~20.04) 10.2.0
+CMake version: version 3.16.3
+
+Python version: 3.6
+Is CUDA available: Yes
+CUDA runtime version: Could not collect
+GPU models and configuration: 
+GPU 0: GeForce RTX 2070 SUPER
+GPU 1: GeForce RTX 2070 SUPER
+
+Nvidia driver version: 460.39
+cuDNN version: Probably one of the following:
+/usr/lib/x86_64-linux-gnu/libcudnn.so.8.0.5
+/usr/lib/x86_64-linux-gnu/libcudnn_adv_infer.so.8.0.5
+/usr/lib/x86_64-linux-gnu/libcudnn_adv_train.so.8.0.5
+/usr/lib/x86_64-linux-gnu/libcudnn_cnn_infer.so.8.0.5
+/usr/lib/x86_64-linux-gnu/libcudnn_cnn_train.so.8.0.5
+/usr/lib/x86_64-linux-gnu/libcudnn_ops_infer.so.8.0.5
+/usr/lib/x86_64-linux-gnu/libcudnn_ops_train.so.8.0.5
+
+Versions of relevant libraries:
+[pip3] numpy==1.19.5
+[pip3] torch==1.4.0
+[pip3] torchvision==0.5.0
+[conda] blas                      1.0                         mkl    defaults
+[conda] mkl                       2020.2                      256    defaults
+[conda] mkl-service               2.3.0            py36he8ac12f_0    defaults
+[conda] mkl_fft                   1.2.0            py36h23d657b_0    defaults
+[conda] mkl_random                1.1.1            py36h0573a6f_0    defaults
+[conda] pytorch                   1.4.0           py3.6_cuda10.1.243_cudnn7.6.3_0    pytorch
+[conda] torchvision               0.5.0                py36_cu101    pytorch
+        Pillow (8.1.0)
+2021-01-29 17:47:40,436 maskrcnn_benchmark INFO: Loaded configuration file configs/e2e_keypoint_rcnn_R_50_FPN_1x_train2017.yaml
+2021-01-29 17:47:40,436 maskrcnn_benchmark INFO: 
+MODEL:
+  META_ARCHITECTURE: "GeneralizedRCNN"
+  WEIGHT: ""
+  BACKBONE:
+    CONV_BODY: "R-50-FPN"
+  RESNETS:
+    BACKBONE_OUT_CHANNELS: 256
+  RPN:
+    USE_FPN: True
+    ANCHOR_STRIDE: (4, 8, 16, 32, 64)
+    PRE_NMS_TOP_N_TRAIN: 2000
+    PRE_NMS_TOP_N_TEST: 1000
+    POST_NMS_TOP_N_TEST: 1000
+    FPN_POST_NMS_TOP_N_TEST: 1000
+  ROI_HEADS:
+    USE_FPN: True
+  ROI_BOX_HEAD:
+    POOLER_RESOLUTION: 7
+    POOLER_SCALES: (0.25, 0.125, 0.0625, 0.03125)
+    POOLER_SAMPLING_RATIO: 2
+    FEATURE_EXTRACTOR: "FPN2MLPFeatureExtractor"
+    PREDICTOR: "FPNPredictor"
+    NUM_CLASSES: 2
+  ROI_KEYPOINT_HEAD:
+    POOLER_SCALES: (0.25, 0.125, 0.0625, 0.03125)
+    FEATURE_EXTRACTOR: "KeypointRCNNFeatureExtractor"
+    PREDICTOR: "KeypointRCNNPredictor"
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 2
+    RESOLUTION: 56
+    SHARE_BOX_FEATURE_EXTRACTOR: False
+  KEYPOINT_ON: True
+DATASETS:
+  TRAIN: ("keypoints_coco_2017_train", "keypoints_coco_2017_val",)
+  TEST: ("keypoints_coco_2017_val",)
+INPUT:
+  MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
+DATALOADER:
+  SIZE_DIVISIBILITY: 32
+SOLVER:
+  BASE_LR: 0.001
+  WEIGHT_DECAY: 0.0001
+  STEPS: (60000, 80000)
+  MAX_ITER: 90000
+  IMS_PER_BATCH: 2
+TEST:
+  IMS_PER_BATCH: 1
+2021-01-29 17:47:40,438 maskrcnn_benchmark INFO: Running with config:
+AMP_VERBOSE: False
+DATALOADER:
+  ASPECT_RATIO_GROUPING: True
+  NUM_WORKERS: 4
+  SIZE_DIVISIBILITY: 32
+DATASETS:
+  TEST: ('keypoints_coco_2017_val',)
+  TRAIN: ('keypoints_coco_2017_train', 'keypoints_coco_2017_val')
+DTYPE: float32
+INPUT:
+  BRIGHTNESS: 0.0
+  CONTRAST: 0.0
+  HORIZONTAL_FLIP_PROB_TRAIN: 0.5
+  HUE: 0.0
+  MAX_SIZE_TEST: 1333
+  MAX_SIZE_TRAIN: 1333
+  MIN_SIZE_TEST: 800
+  MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
+  PIXEL_MEAN: [102.9801, 115.9465, 122.7717]
+  PIXEL_STD: [1.0, 1.0, 1.0]
+  SATURATION: 0.0
+  TO_BGR255: True
+  VERTICAL_FLIP_PROB_TRAIN: 0.0
+MODEL:
+  BACKBONE:
+    CONV_BODY: R-50-FPN
+    FREEZE_CONV_BODY_AT: 2
+  CLS_AGNOSTIC_BBOX_REG: False
+  DEVICE: cuda
+  FBNET:
+    ARCH: default
+    ARCH_DEF: 
+    BN_TYPE: bn
+    DET_HEAD_BLOCKS: []
+    DET_HEAD_LAST_SCALE: 1.0
+    DET_HEAD_STRIDE: 0
+    DW_CONV_SKIP_BN: True
+    DW_CONV_SKIP_RELU: True
+    KPTS_HEAD_BLOCKS: []
+    KPTS_HEAD_LAST_SCALE: 0.0
+    KPTS_HEAD_STRIDE: 0
+    MASK_HEAD_BLOCKS: []
+    MASK_HEAD_LAST_SCALE: 0.0
+    MASK_HEAD_STRIDE: 0
+    RPN_BN_TYPE: 
+    RPN_HEAD_BLOCKS: 0
+    SCALE_FACTOR: 1.0
+    WIDTH_DIVISOR: 1
+  FPN:
+    USE_GN: False
+    USE_RELU: False
+  GROUP_NORM:
+    DIM_PER_GP: -1
+    EPSILON: 1e-05
+    NUM_GROUPS: 32
+  KEYPOINT_ON: True
+  MASK_ON: False
+  META_ARCHITECTURE: GeneralizedRCNN
+  RESNETS:
+    BACKBONE_OUT_CHANNELS: 256
+    DEFORMABLE_GROUPS: 1
+    NUM_GROUPS: 1
+    RES2_OUT_CHANNELS: 256
+    RES5_DILATION: 1
+    STAGE_WITH_DCN: (False, False, False, False)
+    STEM_FUNC: StemWithFixedBatchNorm
+    STEM_OUT_CHANNELS: 64
+    STRIDE_IN_1X1: True
+    TRANS_FUNC: BottleneckWithFixedBatchNorm
+    WIDTH_PER_GROUP: 64
+    WITH_MODULATED_DCN: False
+  RETINANET:
+    ANCHOR_SIZES: (32, 64, 128, 256, 512)
+    ANCHOR_STRIDES: (8, 16, 32, 64, 128)
+    ASPECT_RATIOS: (0.5, 1.0, 2.0)
+    BBOX_REG_BETA: 0.11
+    BBOX_REG_WEIGHT: 4.0
+    BG_IOU_THRESHOLD: 0.4
+    FG_IOU_THRESHOLD: 0.5
+    INFERENCE_TH: 0.05
+    LOSS_ALPHA: 0.25
+    LOSS_GAMMA: 2.0
+    NMS_TH: 0.4
+    NUM_CLASSES: 81
+    NUM_CONVS: 4
+    OCTAVE: 2.0
+    PRE_NMS_TOP_N: 1000
+    PRIOR_PROB: 0.01
+    SCALES_PER_OCTAVE: 3
+    STRADDLE_THRESH: 0
+    USE_C5: True
+  RETINANET_ON: False
+  ROI_BOX_HEAD:
+    CONV_HEAD_DIM: 256
+    DILATION: 1
+    FEATURE_EXTRACTOR: FPN2MLPFeatureExtractor
+    MLP_HEAD_DIM: 1024
+    NUM_CLASSES: 2
+    NUM_STACKED_CONVS: 4
+    POOLER_RESOLUTION: 7
+    POOLER_SAMPLING_RATIO: 2
+    POOLER_SCALES: (0.25, 0.125, 0.0625, 0.03125)
+    PREDICTOR: FPNPredictor
+    USE_GN: False
+  ROI_HEADS:
+    BATCH_SIZE_PER_IMAGE: 512
+    BBOX_REG_WEIGHTS: (10.0, 10.0, 5.0, 5.0)
+    BG_IOU_THRESHOLD: 0.5
+    DETECTIONS_PER_IMG: 100
+    FG_IOU_THRESHOLD: 0.5
+    NMS: 0.5
+    POSITIVE_FRACTION: 0.25
+    SCORE_THRESH: 0.05
+    USE_FPN: True
+  ROI_KEYPOINT_HEAD:
+    CONV_LAYERS: (512, 512, 512, 512, 512, 512, 512, 512)
+    FEATURE_EXTRACTOR: KeypointRCNNFeatureExtractor
+    MLP_HEAD_DIM: 1024
+    NUM_CLASSES: 17
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 2
+    POOLER_SCALES: (0.25, 0.125, 0.0625, 0.03125)
+    PREDICTOR: KeypointRCNNPredictor
+    RESOLUTION: 56
+    SHARE_BOX_FEATURE_EXTRACTOR: False
+  ROI_MASK_HEAD:
+    CONV_LAYERS: (256, 256, 256, 256)
+    DILATION: 1
+    FEATURE_EXTRACTOR: ResNet50Conv5ROIFeatureExtractor
+    MLP_HEAD_DIM: 1024
+    POOLER_RESOLUTION: 14
+    POOLER_SAMPLING_RATIO: 0
+    POOLER_SCALES: (0.0625,)
+    POSTPROCESS_MASKS: False
+    POSTPROCESS_MASKS_THRESHOLD: 0.5
+    PREDICTOR: MaskRCNNC4Predictor
+    RESOLUTION: 14
+    SHARE_BOX_FEATURE_EXTRACTOR: True
+    USE_GN: False
+  RPN:
+    ANCHOR_SIZES: (32, 64, 128, 256, 512)
+    ANCHOR_STRIDE: (4, 8, 16, 32, 64)
+    ASPECT_RATIOS: (0.5, 1.0, 2.0)
+    BATCH_SIZE_PER_IMAGE: 256
+    BG_IOU_THRESHOLD: 0.3
+    FG_IOU_THRESHOLD: 0.7
+    FPN_POST_NMS_PER_BATCH: True
+    FPN_POST_NMS_TOP_N_TEST: 1000
+    FPN_POST_NMS_TOP_N_TRAIN: 2000
+    MIN_SIZE: 0
+    NMS_THRESH: 0.7
+    POSITIVE_FRACTION: 0.5
+    POST_NMS_TOP_N_TEST: 1000
+    POST_NMS_TOP_N_TRAIN: 2000
+    PRE_NMS_TOP_N_TEST: 1000
+    PRE_NMS_TOP_N_TRAIN: 2000
+    RPN_HEAD: SingleConvRPNHead
+    STRADDLE_THRESH: 0
+    USE_FPN: True
+  RPN_ONLY: False
+  WEIGHT: 
+OUTPUT_DIR: .
+PATHS_CATALOG: /opt/SRC/projects/keypoint_detection/maskrcnn-benchmark/maskrcnn_benchmark/config/paths_catalog.py
+SOLVER:
+  BASE_LR: 0.001
+  BIAS_LR_FACTOR: 2
+  CHECKPOINT_PERIOD: 2500
+  GAMMA: 0.1
+  IMS_PER_BATCH: 2
+  MAX_ITER: 90000
+  MOMENTUM: 0.9
+  STEPS: (60000, 80000)
+  TEST_PERIOD: 0
+  WARMUP_FACTOR: 0.3333333333333333
+  WARMUP_ITERS: 500
+  WARMUP_METHOD: linear
+  WEIGHT_DECAY: 0.0001
+  WEIGHT_DECAY_BIAS: 0
+TEST:
+  BBOX_AUG:
+    ENABLED: False
+    H_FLIP: False
+    MAX_SIZE: 4000
+    SCALES: ()
+    SCALE_H_FLIP: False
+  DETECTIONS_PER_IMG: 100
+  EXPECTED_RESULTS: []
+  EXPECTED_RESULTS_SIGMA_TOL: 4
+  IMS_PER_BATCH: 1
+2021-01-29 17:47:40,438 maskrcnn_benchmark INFO: Saving config into: ./config.yml
+Selected optimization level O0:  Pure FP32 training.
+
+Defaults for this optimization level are:
+enabled                : True
+opt_level              : O0
+cast_model_type        : torch.float32
+patch_torch_functions  : False
+keep_batchnorm_fp32    : None
+master_weights         : False
+loss_scale             : 1.0
+Processing user overrides (additional kwargs that are not None)...
+After processing overrides, optimization options are:
+enabled                : True
+opt_level              : O0
+cast_model_type        : torch.float32
+patch_torch_functions  : False
+keep_batchnorm_fp32    : None
+master_weights         : False
+loss_scale             : 1.0
+Warning:  multi_tensor_applier fused unscale kernel is unavailable, possibly because apex was installed without --cuda_ext --cpp_ext. Using Python fallback.  Original ImportError was: ModuleNotFoundError("No module named 'amp_C'",)
+2021-01-29 17:47:44,089 maskrcnn_benchmark.utils.checkpoint INFO: No checkpoint found. Initializing model from scratch
+2021-01-29 17:47:44,090 maskrcnn_benchmark.data.build WARNING: When using more than one image per GPU you may encounter an out-of-memory (OOM) error if your GPU does not have sufficient memory. If this happens, you can reduce SOLVER.IMS_PER_BATCH (for training) or TEST.IMS_PER_BATCH (for inference). For training, you must also adjust the learning rate and schedule length according to the linear scaling rule. See for example: https://github.com/facebookresearch/Detectron/blob/master/configs/getting_started/tutorial_1gpu_e2e_faster_rcnn_R-50-FPN.yaml#L14
+loading annotations into memory...
+Done (t=0.28s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.32s)
+creating index...
+index created!
+2021-01-29 17:47:45,164 maskrcnn_benchmark.utils.miscellaneous WARNING: Dataset [ConcatDataset] has no categories attribute, labels.json file won't be created
+2021-01-29 17:47:45,176 maskrcnn_benchmark.trainer INFO: Start training
+2021-01-29 17:47:52,264 maskrcnn_benchmark.trainer INFO: eta: 8:51:17  iter: 20  loss: 10.5394 (16.3629)  loss_classifier: 1.3696 (2.7623)  loss_box_reg: 0.1162 (0.1426)  loss_kp: 8.3531 (12.7858)  loss_objectness: 0.1932 (0.3619)  loss_rpn_box_reg: 0.1512 (0.3103)  time: 0.3343 (0.3543)  data: 0.0097 (0.0257)  lr: 0.000360  max mem: 2872
+2021-01-29 17:47:59,268 maskrcnn_benchmark.trainer INFO: eta: 8:48:08  iter: 40  loss: 10.2292 (14.6813)  loss_classifier: 1.3923 (3.3218)  loss_box_reg: 0.2496 (0.2695)  loss_kp: 7.8178 (10.2913)  loss_objectness: 0.2518 (0.4358)  loss_rpn_box_reg: 0.0861 (0.3629)  time: 0.3488 (0.3522)  data: 0.0103 (0.0188)  lr: 0.000387  max mem: 2872
+2021-01-29 17:48:06,172 maskrcnn_benchmark.trainer INFO: eta: 8:44:30  iter: 60  loss: 9.0230 (12.8927)  loss_classifier: 0.6728 (2.4494)  loss_box_reg: 0.1047 (0.2220)  loss_kp: 7.7550 (9.4227)  loss_objectness: 0.1472 (0.4074)  loss_rpn_box_reg: 0.0831 (0.3912)  time: 0.3450 (0.3499)  data: 0.0105 (0.0164)  lr: 0.000413  max mem: 2961
+2021-01-29 17:48:13,248 maskrcnn_benchmark.trainer INFO: eta: 8:45:50  iter: 80  loss: 9.8621 (12.3462)  loss_classifier: 1.0581 (2.3130)  loss_box_reg: 0.0564 (0.1956)  loss_kp: 7.6561 (8.9748)  loss_objectness: 0.3273 (0.4242)  loss_rpn_box_reg: 0.1032 (0.4386)  time: 0.3495 (0.3509)  data: 0.0119 (0.0155)  lr: 0.000440  max mem: 2961
+2021-01-29 17:48:20,658 maskrcnn_benchmark.trainer INFO: eta: 8:51:35  iter: 100  loss: 8.3308 (11.5803)  loss_classifier: 0.3067 (1.9223)  loss_box_reg: 0.0701 (0.1752)  loss_kp: 7.5627 (8.7055)  loss_objectness: 0.2143 (0.3962)  loss_rpn_box_reg: 0.0615 (0.3810)  time: 0.3607 (0.3548)  data: 0.0128 (0.0151)  lr: 0.000467  max mem: 3158
+2021-01-29 17:48:27,966 maskrcnn_benchmark.trainer INFO: eta: 8:54:08  iter: 120  loss: 8.2103 (11.0818)  loss_classifier: 0.2604 (1.6783)  loss_box_reg: 0.0585 (0.1600)  loss_kp: 7.5939 (8.5231)  loss_objectness: 0.2225 (0.3800)  loss_rpn_box_reg: 0.0747 (0.3404)  time: 0.3611 (0.3566)  data: 0.0108 (0.0148)  lr: 0.000493  max mem: 3158
+2021-01-29 17:48:35,325 maskrcnn_benchmark.trainer INFO: eta: 8:56:27  iter: 140  loss: 8.1922 (10.6819)  loss_classifier: 0.1648 (1.4724)  loss_box_reg: 0.0709 (0.1480)  loss_kp: 7.7118 (8.3983)  loss_objectness: 0.1852 (0.3587)  loss_rpn_box_reg: 0.0477 (0.3044)  time: 0.3619 (0.3582)  data: 0.0134 (0.0148)  lr: 0.000520  max mem: 3158
+2021-01-29 17:48:42,905 maskrcnn_benchmark.trainer INFO: eta: 9:00:13  iter: 160  loss: 8.0698 (10.3667)  loss_classifier: 0.1860 (1.3174)  loss_box_reg: 0.0785 (0.1431)  loss_kp: 7.6192 (8.2991)  loss_objectness: 0.1147 (0.3349)  loss_rpn_box_reg: 0.0179 (0.2721)  time: 0.3727 (0.3608)  data: 0.0117 (0.0146)  lr: 0.000547  max mem: 3158
+2021-01-29 17:48:50,174 maskrcnn_benchmark.trainer INFO: eta: 9:00:32  iter: 180  loss: 8.0794 (10.1457)  loss_classifier: 0.1645 (1.1979)  loss_box_reg: 0.0675 (0.1360)  loss_kp: 7.6377 (8.2211)  loss_objectness: 0.2196 (0.3341)  loss_rpn_box_reg: 0.0251 (0.2565)  time: 0.3607 (0.3611)  data: 0.0126 (0.0144)  lr: 0.000573  max mem: 3158
+2021-01-29 17:48:57,293 maskrcnn_benchmark.trainer INFO: eta: 8:59:39  iter: 200  loss: 7.9676 (9.9354)  loss_classifier: 0.1400 (1.0938)  loss_box_reg: 0.0506 (0.1287)  loss_kp: 7.4866 (8.1491)  loss_objectness: 0.1465 (0.3244)  loss_rpn_box_reg: 0.0263 (0.2394)  time: 0.3548 (0.3606)  data: 0.0114 (0.0142)  lr: 0.000600  max mem: 3158
+2021-01-29 17:49:04,451 maskrcnn_benchmark.trainer INFO: eta: 8:59:10  iter: 220  loss: 7.9570 (9.7577)  loss_classifier: 0.1388 (1.0108)  loss_box_reg: 0.0563 (0.1236)  loss_kp: 7.4685 (8.0846)  loss_objectness: 0.1422 (0.3143)  loss_rpn_box_reg: 0.0355 (0.2244)  time: 0.3533 (0.3603)  data: 0.0146 (0.0142)  lr: 0.000627  max mem: 3158
+2021-01-29 17:49:11,512 maskrcnn_benchmark.trainer INFO: eta: 8:58:08  iter: 240  loss: 8.0753 (9.6238)  loss_classifier: 0.1448 (0.9395)  loss_box_reg: 0.0544 (0.1191)  loss_kp: 7.5800 (8.0412)  loss_objectness: 0.1912 (0.3102)  loss_rpn_box_reg: 0.0297 (0.2137)  time: 0.3503 (0.3597)  data: 0.0113 (0.0140)  lr: 0.000653  max mem: 3158
+2021-01-29 17:49:19,114 maskrcnn_benchmark.trainer INFO: eta: 9:00:22  iter: 260  loss: 8.1699 (9.5100)  loss_classifier: 0.2047 (0.8836)  loss_box_reg: 0.0939 (0.1179)  loss_kp: 7.5508 (8.0057)  loss_objectness: 0.1635 (0.3018)  loss_rpn_box_reg: 0.0362 (0.2009)  time: 0.3742 (0.3613)  data: 0.0133 (0.0140)  lr: 0.000680  max mem: 3158
+2021-01-29 17:49:26,702 maskrcnn_benchmark.trainer INFO: eta: 9:02:11  iter: 280  loss: 8.0572 (9.4047)  loss_classifier: 0.2001 (0.8353)  loss_box_reg: 0.1021 (0.1180)  loss_kp: 7.5403 (7.9727)  loss_objectness: 0.0780 (0.2896)  loss_rpn_box_reg: 0.0224 (0.1891)  time: 0.3737 (0.3626)  data: 0.0119 (0.0139)  lr: 0.000707  max mem: 3158
+2021-01-29 17:49:34,313 maskrcnn_benchmark.trainer INFO: eta: 9:03:51  iter: 300  loss: 7.9354 (9.3089)  loss_classifier: 0.1163 (0.7907)  loss_box_reg: 0.0612 (0.1159)  loss_kp: 7.5965 (7.9458)  loss_objectness: 0.1036 (0.2778)  loss_rpn_box_reg: 0.0232 (0.1786)  time: 0.3742 (0.3638)  data: 0.0110 (0.0137)  lr: 0.000733  max mem: 3158
+2021-01-29 17:49:41,801 maskrcnn_benchmark.trainer INFO: eta: 9:04:43  iter: 320  loss: 8.2102 (9.2415)  loss_classifier: 0.1836 (0.7538)  loss_box_reg: 0.0817 (0.1145)  loss_kp: 7.5279 (7.9227)  loss_objectness: 0.2128 (0.2765)  loss_rpn_box_reg: 0.0313 (0.1740)  time: 0.3627 (0.3644)  data: 0.0123 (0.0138)  lr: 0.000760  max mem: 3176
+2021-01-29 17:49:49,035 maskrcnn_benchmark.trainer INFO: eta: 9:04:21  iter: 340  loss: 7.9933 (9.1725)  loss_classifier: 0.1391 (0.7184)  loss_box_reg: 0.0624 (0.1119)  loss_kp: 7.4902 (7.9002)  loss_objectness: 0.1711 (0.2717)  loss_rpn_box_reg: 0.0120 (0.1702)  time: 0.3601 (0.3643)  data: 0.0110 (0.0136)  lr: 0.000787  max mem: 3176
+2021-01-29 17:49:56,463 maskrcnn_benchmark.trainer INFO: eta: 9:04:49  iter: 360  loss: 7.8477 (9.1054)  loss_classifier: 0.1328 (0.6864)  loss_box_reg: 0.0688 (0.1096)  loss_kp: 7.4496 (7.8768)  loss_objectness: 0.1555 (0.2675)  loss_rpn_box_reg: 0.0414 (0.1652)  time: 0.3623 (0.3647)  data: 0.0128 (0.0136)  lr: 0.000813  max mem: 3176
+2021-01-29 17:50:04,070 maskrcnn_benchmark.trainer INFO: eta: 9:05:56  iter: 380  loss: 7.9327 (9.0529)  loss_classifier: 0.1531 (0.6602)  loss_box_reg: 0.0743 (0.1084)  loss_kp: 7.4694 (7.8593)  loss_objectness: 0.1907 (0.2648)  loss_rpn_box_reg: 0.0395 (0.1602)  time: 0.3762 (0.3655)  data: 0.0141 (0.0136)  lr: 0.000840  max mem: 3176
+2021-01-29 17:50:11,775 maskrcnn_benchmark.trainer INFO: eta: 9:07:17  iter: 400  loss: 8.0747 (9.0122)  loss_classifier: 0.1941 (0.6378)  loss_box_reg: 0.0870 (0.1084)  loss_kp: 7.5601 (7.8420)  loss_objectness: 0.1983 (0.2648)  loss_rpn_box_reg: 0.0185 (0.1593)  time: 0.3858 (0.3665)  data: 0.0133 (0.0136)  lr: 0.000867  max mem: 3340
+2021-01-29 17:50:19,282 maskrcnn_benchmark.trainer INFO: eta: 9:07:48  iter: 420  loss: 7.9230 (8.9655)  loss_classifier: 0.1212 (0.6151)  loss_box_reg: 0.0712 (0.1071)  loss_kp: 7.4278 (7.8281)  loss_objectness: 0.1176 (0.2612)  loss_rpn_box_reg: 0.0288 (0.1541)  time: 0.3720 (0.3669)  data: 0.0113 (0.0136)  lr: 0.000893  max mem: 3340
+2021-01-29 17:50:26,667 maskrcnn_benchmark.trainer INFO: eta: 9:07:50  iter: 440  loss: 8.2152 (8.9320)  loss_classifier: 0.1873 (0.5957)  loss_box_reg: 0.0725 (0.1063)  loss_kp: 7.5540 (7.8184)  loss_objectness: 0.1799 (0.2602)  loss_rpn_box_reg: 0.0538 (0.1514)  time: 0.3609 (0.3670)  data: 0.0128 (0.0136)  lr: 0.000920  max mem: 3340
+2021-01-29 17:50:34,463 maskrcnn_benchmark.trainer INFO: eta: 9:09:11  iter: 460  loss: 7.9368 (8.8959)  loss_classifier: 0.1759 (0.5785)  loss_box_reg: 0.0821 (0.1065)  loss_kp: 7.5514 (7.8098)  loss_objectness: 0.0980 (0.2544)  loss_rpn_box_reg: 0.0222 (0.1468)  time: 0.3859 (0.3680)  data: 0.0117 (0.0135)  lr: 0.000947  max mem: 3340
+2021-01-29 17:50:41,572 maskrcnn_benchmark.trainer INFO: eta: 9:08:17  iter: 480  loss: 7.9051 (8.8561)  loss_classifier: 0.1558 (0.5612)  loss_box_reg: 0.0828 (0.1055)  loss_kp: 7.4416 (7.7967)  loss_objectness: 0.0566 (0.2501)  loss_rpn_box_reg: 0.0085 (0.1426)  time: 0.3544 (0.3675)  data: 0.0107 (0.0135)  lr: 0.000973  max mem: 3340
+2021-01-29 17:50:48,903 maskrcnn_benchmark.trainer INFO: eta: 9:08:06  iter: 500  loss: 7.9306 (8.8197)  loss_classifier: 0.1508 (0.5453)  loss_box_reg: 0.0523 (0.1046)  loss_kp: 7.3982 (7.7849)  loss_objectness: 0.1283 (0.2465)  loss_rpn_box_reg: 0.0210 (0.1385)  time: 0.3661 (0.3674)  data: 0.0104 (0.0134)  lr: 0.001000  max mem: 3340
+2021-01-29 17:50:56,216 maskrcnn_benchmark.trainer INFO: eta: 9:07:53  iter: 520  loss: 8.0835 (8.7968)  loss_classifier: 0.1794 (0.5314)  loss_box_reg: 0.0910 (0.1041)  loss_kp: 7.5135 (7.7767)  loss_objectness: 0.1431 (0.2467)  loss_rpn_box_reg: 0.0161 (0.1378)  time: 0.3526 (0.3674)  data: 0.0110 (0.0134)  lr: 0.001000  max mem: 3340
+2021-01-29 17:51:03,594 maskrcnn_benchmark.trainer INFO: eta: 9:07:50  iter: 540  loss: 8.2802 (8.7890)  loss_classifier: 0.1507 (0.5188)  loss_box_reg: 0.0531 (0.1031)  loss_kp: 7.6437 (7.7722)  loss_objectness: 0.2525 (0.2540)  loss_rpn_box_reg: 0.0485 (0.1409)  time: 0.3652 (0.3674)  data: 0.0123 (0.0133)  lr: 0.001000  max mem: 3340
+2021-01-29 17:51:10,918 maskrcnn_benchmark.trainer INFO: eta: 9:07:39  iter: 560  loss: 8.0211 (8.7682)  loss_classifier: 0.1562 (0.5062)  loss_box_reg: 0.0490 (0.1018)  loss_kp: 7.4341 (7.7624)  loss_objectness: 0.2849 (0.2560)  loss_rpn_box_reg: 0.0468 (0.1417)  time: 0.3625 (0.3674)  data: 0.0125 (0.0134)  lr: 0.001000  max mem: 3340
+2021-01-29 17:51:18,376 maskrcnn_benchmark.trainer INFO: eta: 9:07:49  iter: 580  loss: 8.0484 (8.7461)  loss_classifier: 0.1653 (0.4960)  loss_box_reg: 0.0773 (0.1021)  loss_kp: 7.5128 (7.7551)  loss_objectness: 0.0958 (0.2542)  loss_rpn_box_reg: 0.0167 (0.1387)  time: 0.3579 (0.3676)  data: 0.0138 (0.0134)  lr: 0.001000  max mem: 3340
+2021-01-29 17:51:26,049 maskrcnn_benchmark.trainer INFO: eta: 9:08:29  iter: 600  loss: 7.9596 (8.7274)  loss_classifier: 0.1645 (0.4869)  loss_box_reg: 0.0900 (0.1022)  loss_kp: 7.4378 (7.7472)  loss_objectness: 0.1784 (0.2544)  loss_rpn_box_reg: 0.0253 (0.1367)  time: 0.3836 (0.3681)  data: 0.0114 (0.0134)  lr: 0.001000  max mem: 3340
+2021-01-29 17:51:33,445 maskrcnn_benchmark.trainer INFO: eta: 9:08:27  iter: 620  loss: 7.9264 (8.7070)  loss_classifier: 0.1511 (0.4773)  loss_box_reg: 0.0824 (0.1020)  loss_kp: 7.4818 (7.7395)  loss_objectness: 0.1113 (0.2527)  loss_rpn_box_reg: 0.0183 (0.1355)  time: 0.3657 (0.3682)  data: 0.0115 (0.0133)  lr: 0.001000  max mem: 3340
+2021-01-29 17:51:41,085 maskrcnn_benchmark.trainer INFO: eta: 9:08:58  iter: 640  loss: 8.0031 (8.6882)  loss_classifier: 0.1757 (0.4691)  loss_box_reg: 0.1139 (0.1026)  loss_kp: 7.5020 (7.7333)  loss_objectness: 0.1034 (0.2503)  loss_rpn_box_reg: 0.0158 (0.1330)  time: 0.3746 (0.3686)  data: 0.0112 (0.0133)  lr: 0.001000  max mem: 3340
+2021-01-29 17:51:48,647 maskrcnn_benchmark.trainer INFO: eta: 9:09:16  iter: 660  loss: 7.9929 (8.6673)  loss_classifier: 0.1616 (0.4612)  loss_box_reg: 0.0882 (0.1025)  loss_kp: 7.4276 (7.7241)  loss_objectness: 0.1147 (0.2487)  loss_rpn_box_reg: 0.0150 (0.1309)  time: 0.3724 (0.3689)  data: 0.0113 (0.0133)  lr: 0.001000  max mem: 3340
+2021-01-29 17:51:56,135 maskrcnn_benchmark.trainer INFO: eta: 9:09:23  iter: 680  loss: 8.1354 (8.6548)  loss_classifier: 0.1635 (0.4533)  loss_box_reg: 0.0665 (0.1026)  loss_kp: 7.6562 (7.7205)  loss_objectness: 0.1501 (0.2478)  loss_rpn_box_reg: 0.0295 (0.1306)  time: 0.3591 (0.3691)  data: 0.0136 (0.0133)  lr: 0.001000  max mem: 3340
+2021-01-29 17:52:03,771 maskrcnn_benchmark.trainer INFO: eta: 9:09:48  iter: 700  loss: 7.9478 (8.6390)  loss_classifier: 0.1387 (0.4451)  loss_box_reg: 0.0848 (0.1022)  loss_kp: 7.4455 (7.7166)  loss_objectness: 0.1543 (0.2468)  loss_rpn_box_reg: 0.0164 (0.1284)  time: 0.3775 (0.3694)  data: 0.0119 (0.0133)  lr: 0.001000  max mem: 3340
+2021-01-29 17:52:11,539 maskrcnn_benchmark.trainer INFO: eta: 9:10:28  iter: 720  loss: 8.1995 (8.6282)  loss_classifier: 0.1724 (0.4388)  loss_box_reg: 0.0671 (0.1020)  loss_kp: 7.5887 (7.7136)  loss_objectness: 0.2071 (0.2466)  loss_rpn_box_reg: 0.0545 (0.1272)  time: 0.3739 (0.3699)  data: 0.0148 (0.0133)  lr: 0.001000  max mem: 3481
+2021-01-29 17:52:19,048 maskrcnn_benchmark.trainer INFO: eta: 9:10:34  iter: 740  loss: 7.9010 (8.6122)  loss_classifier: 0.1788 (0.4328)  loss_box_reg: 0.0916 (0.1022)  loss_kp: 7.4082 (7.7056)  loss_objectness: 0.1590 (0.2460)  loss_rpn_box_reg: 0.0212 (0.1256)  time: 0.3577 (0.3701)  data: 0.0113 (0.0133)  lr: 0.001000  max mem: 3481
+2021-01-29 17:52:26,588 maskrcnn_benchmark.trainer INFO: eta: 9:10:43  iter: 760  loss: 7.9907 (8.5952)  loss_classifier: 0.1670 (0.4266)  loss_box_reg: 0.0861 (0.1023)  loss_kp: 7.4012 (7.6980)  loss_objectness: 0.1544 (0.2446)  loss_rpn_box_reg: 0.0199 (0.1238)  time: 0.3699 (0.3703)  data: 0.0130 (0.0133)  lr: 0.001000  max mem: 3481
+2021-01-29 17:52:34,021 maskrcnn_benchmark.trainer INFO: eta: 9:10:39  iter: 780  loss: 7.9558 (8.5830)  loss_classifier: 0.1594 (0.4206)  loss_box_reg: 0.1175 (0.1025)  loss_kp: 7.4756 (7.6934)  loss_objectness: 0.1148 (0.2435)  loss_rpn_box_reg: 0.0225 (0.1231)  time: 0.3560 (0.3703)  data: 0.0111 (0.0133)  lr: 0.001000  max mem: 3481
+2021-01-29 17:52:41,330 maskrcnn_benchmark.trainer INFO: eta: 9:10:20  iter: 800  loss: 7.9586 (8.5706)  loss_classifier: 0.1514 (0.4142)  loss_box_reg: 0.0673 (0.1017)  loss_kp: 7.4911 (7.6892)  loss_objectness: 0.1852 (0.2433)  loss_rpn_box_reg: 0.0144 (0.1222)  time: 0.3672 (0.3702)  data: 0.0121 (0.0133)  lr: 0.001000  max mem: 3481
+2021-01-29 17:52:48,763 maskrcnn_benchmark.trainer INFO: eta: 9:10:16  iter: 820  loss: 8.0297 (8.5613)  loss_classifier: 0.1622 (0.4083)  loss_box_reg: 0.0866 (0.1014)  loss_kp: 7.5060 (7.6840)  loss_objectness: 0.2800 (0.2450)  loss_rpn_box_reg: 0.0602 (0.1227)  time: 0.3670 (0.3702)  data: 0.0134 (0.0133)  lr: 0.001000  max mem: 3481
+2021-01-29 17:52:56,503 maskrcnn_benchmark.trainer INFO: eta: 9:10:44  iter: 840  loss: 7.9060 (8.5494)  loss_classifier: 0.1969 (0.4038)  loss_box_reg: 0.0927 (0.1015)  loss_kp: 7.3772 (7.6770)  loss_objectness: 0.2083 (0.2454)  loss_rpn_box_reg: 0.0401 (0.1217)  time: 0.3847 (0.3706)  data: 0.0134 (0.0133)  lr: 0.001000  max mem: 3481
+2021-01-29 17:53:04,052 maskrcnn_benchmark.trainer INFO: eta: 9:10:51  iter: 860  loss: 7.9347 (8.5363)  loss_classifier: 0.2035 (0.3991)  loss_box_reg: 0.0920 (0.1014)  loss_kp: 7.4875 (7.6720)  loss_objectness: 0.1376 (0.2436)  loss_rpn_box_reg: 0.0326 (0.1201)  time: 0.3702 (0.3708)  data: 0.0122 (0.0133)  lr: 0.001000  max mem: 3481
+2021-01-29 17:53:11,783 maskrcnn_benchmark.trainer INFO: eta: 9:11:16  iter: 880  loss: 7.8745 (8.5218)  loss_classifier: 0.1889 (0.3947)  loss_box_reg: 0.1089 (0.1017)  loss_kp: 7.3430 (7.6638)  loss_objectness: 0.1032 (0.2425)  loss_rpn_box_reg: 0.0232 (0.1191)  time: 0.3784 (0.3711)  data: 0.0122 (0.0133)  lr: 0.001000  max mem: 3481
+2021-01-29 17:53:19,480 maskrcnn_benchmark.trainer INFO: eta: 9:11:35  iter: 900  loss: 7.7985 (8.5047)  loss_classifier: 0.1378 (0.3896)  loss_box_reg: 0.0700 (0.1012)  loss_kp: 7.1375 (7.6535)  loss_objectness: 0.1577 (0.2420)  loss_rpn_box_reg: 0.0443 (0.1185)  time: 0.3837 (0.3714)  data: 0.0132 (0.0133)  lr: 0.001000  max mem: 3481
+2021-01-29 17:53:26,939 maskrcnn_benchmark.trainer INFO: eta: 9:11:31  iter: 920  loss: 7.6930 (8.4899)  loss_classifier: 0.1427 (0.3849)  loss_box_reg: 0.0595 (0.1007)  loss_kp: 7.2645 (7.6457)  loss_objectness: 0.1580 (0.2414)  loss_rpn_box_reg: 0.0243 (0.1172)  time: 0.3658 (0.3715)  data: 0.0132 (0.0133)  lr: 0.001000  max mem: 3481
+2021-01-29 17:53:34,245 maskrcnn_benchmark.trainer INFO: eta: 9:11:12  iter: 940  loss: 7.7972 (8.4769)  loss_classifier: 0.1259 (0.3795)  loss_box_reg: 0.0585 (0.0998)  loss_kp: 7.3127 (7.6381)  loss_objectness: 0.2229 (0.2418)  loss_rpn_box_reg: 0.0213 (0.1177)  time: 0.3653 (0.3713)  data: 0.0126 (0.0133)  lr: 0.001000  max mem: 3481

@@ -158,7 +158,7 @@ class KeypointRCNNLossComputation(object):
         valid = torch.nonzero(valid).squeeze(1)
 
         # torch.mean (in binary_cross_entropy_with_logits) does'nt
-        # accept empty tensors, so handle it sepaartely
+        # accept empty tensors, so handle it separately
         if keypoint_targets.numel() == 0 or len(valid) == 0:
             return keypoint_logits.sum() * 0
 

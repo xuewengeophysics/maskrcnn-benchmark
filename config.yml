@@ -232,11 +232,11 @@ MODEL:
 OUTPUT_DIR: .
 PATHS_CATALOG: /opt/SRC/projects/keypoint_detection/maskrcnn-benchmark/maskrcnn_benchmark/config/paths_catalog.py
 SOLVER:
-  BASE_LR: 0.02
+  BASE_LR: 0.001
   BIAS_LR_FACTOR: 2
   CHECKPOINT_PERIOD: 2500
   GAMMA: 0.1
-  IMS_PER_BATCH: 16
+  IMS_PER_BATCH: 2
   MAX_ITER: 90000
   MOMENTUM: 0.9
   STEPS:
@@ -258,4 +258,4 @@ TEST:
   DETECTIONS_PER_IMG: 100
   EXPECTED_RESULTS: []
   EXPECTED_RESULTS_SIGMA_TOL: 4
-  IMS_PER_BATCH: 8
+  IMS_PER_BATCH: 1
