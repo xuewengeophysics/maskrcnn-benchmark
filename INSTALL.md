@@ -106,7 +106,7 @@ cd ..
 
 git clone https://github.com/NVIDIA/apex.git
 cd apex
-python setup.py install --cuda_ext --cpp_ext
+python setup.py install (instead of python setup.py install --cuda_ext --cpp_ext)
 # navigate back to INSTALL_DIR
 cd ..
 # install PyTorch Detection
