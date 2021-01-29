@@ -35,3 +35,5 @@ dist/
 /datasets
 /models
 /output
+*log*
+*.txt*
