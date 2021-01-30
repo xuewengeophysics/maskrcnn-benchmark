@@ -53,6 +53,8 @@ _C.INPUT.PIXEL_MEAN = [102.9801, 115.9465, 122.7717]
 _C.INPUT.PIXEL_STD = [1., 1., 1.]
 # Convert image to BGR format (for Caffe2 models), in range 0-255
 _C.INPUT.TO_BGR255 = True
+# Align image height and width to a int factor, 0 represents no align
+_C.INPUT.ALIGN_IMAGE_FACTOR = 0
 
 # Image ColorJitter
 _C.INPUT.BRIGHTNESS = 0.0
@@ -101,7 +103,17 @@ _C.MODEL.BACKBONE.CONV_BODY = "R-50-C4"
 
 # Add StopGrad at a specified stage so the bottom layers are frozen
 _C.MODEL.BACKBONE.FREEZE_CONV_BODY_AT = 2
+_C.MODEL.BACKBONE.OUT_CHANNELS = 256 * 4
 
+
+# NECK
+_C.MODEL.NECK = CN()
+_C.MODEL.NECK.IN_CHANNELS = (32, 64, 128, 256)
+_C.MODEL.NECK.OUT_CHANNELS = 256
+_C.MODEL.NECK.ACTIVATION = False
+_C.MODEL.NECK.POOLING = ' AVG'
+_C.MODEL.NECK.SHARING_CONV = False
+_C.MODEL.NECK.NUM_OUTS = 5
 
 # ---------------------------------------------------------------------------- #
 # FPN options
@@ -290,6 +302,63 @@ _C.MODEL.RESNETS.DEFORMABLE_GROUPS = 1
 
 
 # ---------------------------------------------------------------------------- #
+# HRNET options
+# These options apply to both
+# ---------------------------------------------------------------------------- #
+_C.MODEL.HRNET = CN()
+# MODEL.HRNET related params
+_C.MODEL.HRNET = CN()
+_C.MODEL.HRNET.BASE_CHANNEL = [96, 96, 96, 96]
+_C.MODEL.HRNET.CHANNEL_GROWTH = 2
+_C.MODEL.HRNET.BLOCK_TYPE = 'BottleneckWithFixedBatchNorm'
+_C.MODEL.HRNET.BRANCH_DEPTH = [3, 3, 3, 3]
+_C.MODEL.HRNET.NUM_BLOCKS = [6, 4, 4, 4]
+_C.MODEL.HRNET.NUM_LAYERS = [3, 3, 3]
+_C.MODEL.HRNET.FINAL_CONV_KERNEL = 1
+
+
+# for bi-directional fusion
+# Stage 1
+_C.MODEL.HRNET.STAGE1 = CN()
+_C.MODEL.HRNET.STAGE1.NUM_MODULES = 1
+_C.MODEL.HRNET.STAGE1.NUM_BRANCHES = 1
+_C.MODEL.HRNET.STAGE1.NUM_BLOCKS = [3]
+_C.MODEL.HRNET.STAGE1.NUM_CHANNELS = [64]
+_C.MODEL.HRNET.STAGE1.BLOCK = 'BottleneckWithFixedBatchNorm'
+_C.MODEL.HRNET.STAGE1.FUSE_METHOD = 'SUM'
+# Stage 2
+_C.MODEL.HRNET.STAGE2 = CN()
+_C.MODEL.HRNET.STAGE2.NUM_MODULES = 1
+_C.MODEL.HRNET.STAGE2.NUM_BRANCHES = 2
+_C.MODEL.HRNET.STAGE2.NUM_BLOCKS = [4, 4]
+_C.MODEL.HRNET.STAGE2.NUM_CHANNELS = [24, 48]
+_C.MODEL.HRNET.STAGE2.BLOCK = 'BottleneckWithFixedBatchNorm'
+_C.MODEL.HRNET.STAGE2.FUSE_METHOD = 'SUM'
+# Stage 3
+_C.MODEL.HRNET.STAGE3 = CN()
+_C.MODEL.HRNET.STAGE3.NUM_MODULES = 1
+_C.MODEL.HRNET.STAGE3.NUM_BRANCHES = 3
+_C.MODEL.HRNET.STAGE3.NUM_BLOCKS = [4, 4, 4]
+_C.MODEL.HRNET.STAGE3.NUM_CHANNELS = [24, 48, 92]
+_C.MODEL.HRNET.STAGE3.BLOCK = 'BottleneckWithFixedBatchNorm'
+_C.MODEL.HRNET.STAGE3.FUSE_METHOD = 'SUM'
+# Stage 4
+_C.MODEL.HRNET.STAGE4 = CN()
+_C.MODEL.HRNET.STAGE4.NUM_MODULES = 1
+_C.MODEL.HRNET.STAGE4.NUM_BRANCHES = 4
+_C.MODEL.HRNET.STAGE4.NUM_BLOCKS = [4, 4, 4, 4]
+_C.MODEL.HRNET.STAGE4.NUM_CHANNELS = [24, 48, 92, 192]
+_C.MODEL.HRNET.STAGE4.BLOCK = 'BottleneckWithFixedBatchNorm'
+_C.MODEL.HRNET.STAGE4.FUSE_METHOD = 'SUM'
+_C.MODEL.HRNET.STAGE4.MULTI_OUTPUT = True
+# Decoder
+_C.MODEL.HRNET.DECODER = CN()
+_C.MODEL.HRNET.DECODER.BLOCK = 'BottleneckWithFixedBatchNorm'
+_C.MODEL.HRNET.DECODER.HEAD_UPSAMPLING = 'BILINEAR'
+_C.MODEL.HRNET.DECODER.HEAD_UPSAMPLING_KERNEL = 1
+
+
+# ---------------------------------------------------------------------------- #
 # RetinaNet Options (Follow the Detectron version)
 # ---------------------------------------------------------------------------- #
 _C.MODEL.RETINANET = CN()
@@ -428,6 +497,9 @@ _C.TEST.EXPECTED_RESULTS_SIGMA_TOL = 4
 _C.TEST.IMS_PER_BATCH = 8
 # Number of detections per image
 _C.TEST.DETECTIONS_PER_IMG = 100
+_C.TEST.MULTI_SCALE = False
+_C.TEST.MULTI_SIZES = [(480, 800), (600, 1000), (800, 1333), (1000, 1667), (1200, 2000)]
+
 
 # ---------------------------------------------------------------------------- #
 # Test-time augmentations for bounding box detection
