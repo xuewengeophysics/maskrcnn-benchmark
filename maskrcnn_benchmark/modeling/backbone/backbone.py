@@ -5,8 +5,26 @@ from torch import nn
 
 from maskrcnn_benchmark.modeling import registry
 from maskrcnn_benchmark.modeling.make_layers import conv_with_kaiming_uniform
+
 from . import fpn as fpn_module
 from . import resnet
+from . import hrnet
+from . import hrfpn
+
+
+@registry.BACKBONES.register("HRNET")
+def build_msnet_backbone(cfg):
+    body = hrnet.HRNet(cfg)
+    model = nn.Sequential(OrderedDict([("body", body)]))
+    return model
+
+
+@registry.BACKBONES.register('HRNET-FPN')  ##我觉得应该叫HRNET-FPN
+def build_hrnet_hr_backbone(cfg):
+    body = hrnet.HRNet(cfg)
+    neck = hrfpn.HRFPN(cfg)
+    model = nn.Sequential(OrderedDict([('body', body), ('neck', neck)]))
+    return model
 
 
 @registry.BACKBONES.register("R-50-C4")
