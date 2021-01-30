@@ -36,4 +36,5 @@ dist/
 /models
 /output
 log.txt
-*.txt*
+*.txt
+last_checkpoint
