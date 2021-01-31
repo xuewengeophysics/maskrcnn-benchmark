@@ -59,6 +59,8 @@ def train(cfg, local_rank, distributed):
     arguments["iteration"] = 0
 
     output_dir = cfg.OUTPUT_DIR
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
     save_to_disk = get_rank() == 0
     checkpointer = DetectronCheckpointer(
