@@ -33,10 +33,10 @@ class ROIKeypointHead(torch.nn.Module):
         """
         if self.training:
             with torch.no_grad():
-                proposals = self.loss_evaluator.subsample(proposals, targets)
+                proposals = self.loss_evaluator.subsample(proposals, targets)  ##调用的是loss.py中的class KeypointRCNNLossComputation(object):中的subsample
 
-        x = self.feature_extractor(features, proposals)
-        kp_logits = self.predictor(x)
+        x = self.feature_extractor(features, proposals)  ##此处得到的是[persom_num, 17, 28, 28]的特征图，此处修改成heatmap的维度
+        kp_logits = self.predictor(x)  ##得到关键点的坐标[persom_num, 17, 3]，这一层直接干掉，将上面的heatmap与gt heatmap一起用于计算损失函数
 
         if not self.training:
             result = self.post_processor(kp_logits, proposals)

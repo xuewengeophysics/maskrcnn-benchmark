@@ -178,6 +178,6 @@ def make_roi_keypoint_loss_evaluator(cfg):
     fg_bg_sampler = BalancedPositiveNegativeSampler(
         cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE, cfg.MODEL.ROI_HEADS.POSITIVE_FRACTION
     )
-    resolution = cfg.MODEL.ROI_KEYPOINT_HEAD.RESOLUTION
+    resolution = cfg.MODEL.ROI_KEYPOINT_HEAD.RESOLUTION  ##在yaml配置文件中赋值了，为56。
     loss_evaluator = KeypointRCNNLossComputation(matcher, fg_bg_sampler, resolution)
     return loss_evaluator

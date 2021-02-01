@@ -185,4 +185,5 @@ def keypoints_to_heat_map(keypoints, rois, heatmap_size):
     lin_ind = y * heatmap_size + x
     heatmaps = lin_ind * valid
 
+    ##heatmaps的维度为[person_num, 17, 3], valid的维度为[person_num, 17]
     return heatmaps, valid
