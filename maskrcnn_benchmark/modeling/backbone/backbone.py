@@ -13,17 +13,19 @@ from . import hrfpn
 
 
 @registry.BACKBONES.register("HRNET")
-def build_msnet_backbone(cfg):
+def build_hrnet_backbone(cfg):
     body = hrnet.HRNet(cfg)
     model = nn.Sequential(OrderedDict([("body", body)]))
+    model.out_channels = cfg.MODEL.BACKBONE.OUT_CHANNELS
     return model
 
 
 @registry.BACKBONES.register('HRNET-FPN')  ##我觉得应该叫HRNET-FPN
-def build_hrnet_hr_backbone(cfg):
+def build_hrnet_fpn_backbone(cfg):
     body = hrnet.HRNet(cfg)
     neck = hrfpn.HRFPN(cfg)
     model = nn.Sequential(OrderedDict([('body', body), ('neck', neck)]))
+    model.out_channels = cfg.MODEL.BACKBONE.OUT_CHANNELS
     return model
 
 
