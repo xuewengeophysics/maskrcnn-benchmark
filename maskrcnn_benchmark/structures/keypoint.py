@@ -1,5 +1,5 @@
 import torch
-
+import numpy as np
 
 # transpose
 FLIP_LEFT_RIGHT = 0
@@ -151,7 +151,16 @@ PersonKeypoints.CONNECTIONS = kp_connections(PersonKeypoints.NAMES)
 
 
 # TODO make this nicer, this is a direct translation from C2 (but removing the inner loop)
-def keypoints_to_heat_map(keypoints, rois, heatmap_size):
+def keypoints_to_heatmap(keypoints, rois, heatmap_size):
+    """
+    input:
+        keypoint的维度为[person_num, 17, 3], "3"代表(x, y, visibility)
+        rois的维度为[person_num, 4], "4"代表(x1, y1, x2, y2)
+        heatmap_size的大小等于cfg.MODEL.ROI_KEYPOINT_HEAD.RESOLUTION, 配置文件中为56
+    output:
+        heatmaps的维度为[person_num, 17], 代表关键点的ground truth特征
+        valid的维度为[person_num, 17], 代表关键点是否存在
+    """
     if rois.numel() == 0:
         return rois.new().long(), rois.new().long()
     offset_x = rois[:, 0]
@@ -185,5 +194,145 @@ def keypoints_to_heat_map(keypoints, rois, heatmap_size):
     lin_ind = y * heatmap_size + x
     heatmaps = lin_ind * valid
 
-    ##heatmaps的维度为[person_num, 17, 3], valid的维度为[person_num, 17]
+    ##heatmaps的维度为[person_num, 17], valid的维度为[person_num, 17]
+    import ipdb;ipdb.set_trace()
     return heatmaps, valid
+
+
+
+# Generate the target heatmap using gaussian
+def keypoints_to_heatmap_gaussian(keypoints, rois, heatmap_size):
+    """
+    input:
+        keypoint的维度为[person_num, 17, 3], "3"代表(x, y, visibility)
+        rois的维度为[person_num, 4], "4"代表(x1, y1, x2, y2)
+        heatmap_size的大小等于cfg.MODEL.ROI_KEYPOINT_HEAD.RESOLUTION, 配置文件中为56
+    output:
+        heatmaps的维度为[person_num, 17, heatmap_size, heatmap_size], 代表关键点的ground truth特征
+        valid的维度为[person_num, 17], 代表关键点是否存在
+    """
+    if rois.numel() == 0:
+        return rois.new().long(), rois.new().long()
+    offset_x = rois[:, 0]
+    offset_y = rois[:, 1]
+    scale_x = heatmap_size / (rois[:, 2] - rois[:, 0])
+    scale_y = heatmap_size / (rois[:, 3] - rois[:, 1])
+
+    offset_x = offset_x[:, None]
+    offset_y = offset_y[:, None]
+    scale_x = scale_x[:, None]
+    scale_y = scale_y[:, None]
+
+    x = keypoints[..., 0]
+    y = keypoints[..., 1]
+
+    x_boundary_inds = x == rois[:, 2][:, None]
+    y_boundary_inds = y == rois[:, 3][:, None]
+
+    x = (x - offset_x) * scale_x
+    x = x.floor().long()
+    y = (y - offset_y) * scale_y
+    y = y.floor().long()
+    
+    x[x_boundary_inds] = heatmap_size - 1
+    y[y_boundary_inds] = heatmap_size - 1
+
+    valid_loc = (x >= 0) & (y >= 0) & (x < heatmap_size) & (y < heatmap_size)
+    vis = keypoints[..., 2] > 0
+    valid = (valid_loc & vis).long()
+
+    lin_ind = y * heatmap_size + x
+    # heatmaps = lin_ind * valid
+
+    ##heatmaps的维度为[person_num, 17, heatmap_size, heatmap_size], valid的维度为[person_num, 17]
+    heatmaps = []
+    for k in range(len(keypoints)):
+        # print("ann keypoints = ", ann['keypoints'])
+        # ipdb.set_trace()
+        joints_3d =np.array(keypoints[k].cpu().tolist())  ##17代表关键点个数，3代表(x, y, v)，v为{0:不存在, 1:存在但不可见, 2:存在且可见}
+        x1, y1, x2, y2 = list(map(int, np.array(rois[k].cpu().tolist())))
+        w = x2 - x1
+        h = y2 - y1
+        enlarge_ratio_h, enlarge_ratio_w = heatmap_size/h, heatmap_size/w
+        
+        nonzero_x = joints_3d[..., 0].nonzero()[0]  ##array，x坐标不为0的关键点的index组成的array
+        nonzero_y = joints_3d[..., 1].nonzero()[0]  ##array，y坐标不为0的关键点的index组成的array
+
+        # import ipdb;ipdb.set_trace()
+        joints_3d[..., 0][nonzero_x] = (joints_3d[..., 0][nonzero_x] - x1) * enlarge_ratio_w  ##各个关键点在大小为[WIDTH, HEIGHT]的resize图上的位置的x坐标
+        joints_3d[..., 1][nonzero_y] = (joints_3d[..., 1][nonzero_y] - y1) * enlarge_ratio_h  ##各个关键点在大小为[WIDTH, HEIGHT]的resize图上的位置的y坐标
+
+        # cv2.imwrite("./croped_person{}.png".format(k), croped_person)
+        joints_3d_visible = np.zeros((17, 3))
+        for i, kps in enumerate(joints_3d):
+            v = kps[-1]
+            if v > 0:
+                joints_3d_visible[i] = np.array([1,1,1])
+        WIDTH = heatmap_size
+        HEIGHT = heatmap_size
+        heatmap_w = heatmap_size
+        heatmap_h = heatmap_size
+        cfg = {'image_size': np.array([WIDTH, HEIGHT]), 'num_joints': 17, 'heatmap_size': np.array([heatmap_w, heatmap_h])}
+        #  result = generate_guassian_heatmap(cfg, joints_3d, joints_3d_visible)
+        targets, targets_visible = generate_target(cfg, joints_3d, joints_3d_visible) # 包含了17个heatmap
+
+        heatmaps.append(targets)
+    heatmaps = torch.from_numpy(np.array(heatmaps)).cuda()
+    # import ipdb;ipdb.set_trace()
+
+    return heatmaps, valid
+
+
+def generate_target(cfg, joints_3d, joints_3d_visible, sigma=3):
+    """Generate the target heatmap.
+
+    Args:
+        cfg (dict): data config
+        joints_3d: np.ndarray ([num_joints, 3])
+        joints_3d_visible: np.ndarray ([num_joints, 3])
+
+    Returns:
+        tuple: A tuple containing targets.
+
+        - target: Target heatmaps.
+        - target_weight: (1: visible, 0: invisible)
+    ??? image_size 在其中的作用, 表明关键点坐标的相对位置
+    """
+    num_joints = cfg['num_joints']
+    image_size = cfg['image_size']
+    heatmap_size = cfg['heatmap_size']
+    target_weight = np.zeros((num_joints, 1), dtype=np.float32)
+    target = np.zeros((num_joints, heatmap_size[1], heatmap_size[0]),
+                        dtype=np.float32)
+    tmp_size = sigma * 3
+    for joint_id in range(num_joints):
+        heatmap_vis = joints_3d_visible[joint_id, 0]
+        target_weight[joint_id] = heatmap_vis
+        feat_stride = image_size / heatmap_size
+        mu_x = int(joints_3d[joint_id][0] / feat_stride[0] + 0.5)
+        mu_y = int(joints_3d[joint_id][1] / feat_stride[1] + 0.5)
+        # Check that any part of the gaussian is in-bounds
+        ul = [int(mu_x - tmp_size), int(mu_y - tmp_size)]
+        br = [int(mu_x + tmp_size + 1), int(mu_y + tmp_size + 1)]
+        if ul[0] >= heatmap_size[0] or ul[1] >= heatmap_size[1] or br[
+                0] < 0 or br[1] < 0:
+            # print("warn: {}".format(joint_id))
+            target_weight[joint_id] = 0
+        if target_weight[joint_id] > 0.5:
+            size = 2 * tmp_size + 1
+            x = np.arange(0, size, 1, np.float32)
+            y = x[:, None]
+            x0 = y0 = size // 2
+            # The gaussian is not normalized,
+            # we want the center value to equal 1
+            g = np.exp(-((x - x0)**2 + (y - y0)**2) /
+                        (2 * sigma**2))
+            # Usable gaussian range
+            g_x = max(0, -ul[0]), min(br[0], heatmap_size[0]) - ul[0]
+            g_y = max(0, -ul[1]), min(br[1], heatmap_size[1]) - ul[1]
+            # Image range
+            img_x = max(0, ul[0]), min(br[0], heatmap_size[0])
+            img_y = max(0, ul[1]), min(br[1], heatmap_size[1])
+            target[joint_id][img_y[0]:img_y[1], img_x[0]:img_x[1]] = \
+                g[g_y[0]:g_y[1], g_x[0]:g_x[1]]
+    return target, target_weight

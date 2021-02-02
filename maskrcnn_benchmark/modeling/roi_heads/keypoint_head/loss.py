@@ -11,12 +11,13 @@ from maskrcnn_benchmark.modeling.utils import cat
 from maskrcnn_benchmark.layers import smooth_l1_loss
 from maskrcnn_benchmark.structures.boxlist_ops import cat_boxlist
 
-from maskrcnn_benchmark.structures.keypoint import keypoints_to_heat_map
+from maskrcnn_benchmark.structures.keypoint import keypoints_to_heatmap, keypoints_to_heatmap_gaussian
 
 
 def project_keypoints_to_heatmap(keypoints, proposals, discretization_size):
     proposals = proposals.convert("xyxy")
-    return keypoints_to_heat_map(
+    # return keypoints_to_heatmap(
+    return keypoints_to_heatmap_gaussian(
         keypoints.keypoints, proposals.bbox, discretization_size
     )
 
@@ -153,7 +154,7 @@ class KeypointRCNNLossComputation(object):
             heatmaps.append(heatmaps_per_image.view(-1))
             valid.append(valid_per_image.view(-1))
 
-        keypoint_targets = cat(heatmaps, dim=0)
+        keypoint_targets = cat(heatmaps, dim=0)  ##维度为[N * K], N个person, 17个关键点
         valid = cat(valid, dim=0).to(dtype=torch.bool)
         valid = torch.nonzero(valid).squeeze(1)
 
@@ -163,9 +164,14 @@ class KeypointRCNNLossComputation(object):
             return keypoint_logits.sum() * 0
 
         N, K, H, W = keypoint_logits.shape
-        keypoint_logits = keypoint_logits.view(N * K, H * W)
+        keypoint_logits = keypoint_logits.view(N * K, H * W)  ##N个person, 17个关键点, 56*56的特征图
+        keypoint_targets = keypoint_targets.view(N * K, H * W)  ##N个person, 17个关键点, 56*56的特征图 
 
-        keypoint_loss = F.cross_entropy(keypoint_logits[valid], keypoint_targets[valid])
+        # import ipdb;ipdb.set_trace()
+        # keypoint_loss = F.cross_entropy(keypoint_logits[valid], keypoint_targets[valid])
+        keypoint_loss = torch.mean((keypoint_logits[valid] - keypoint_targets[valid]) ** 2) * 40
+        # import ipdb;ipdb.set_trace()
+
         return keypoint_loss
 
 
