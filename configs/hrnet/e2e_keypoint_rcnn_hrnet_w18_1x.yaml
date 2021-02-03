@@ -7,7 +7,7 @@ INPUT:
   MIN_SIZE_TRAIN: (640, 672, 704, 736, 768, 800)
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
-  WEIGHT: ""
+  WEIGHT: "output/keypoint_rcnn_hrnet_w18_1x_20210202"  #_20210202
   BACKBONE:
     CONV_BODY: "HRNET-FPN"
     OUT_CHANNELS: 256
@@ -105,4 +105,4 @@ SOLVER:
   STEPS: (60000, 80000)
   MAX_ITER: 90000
   IMS_PER_BATCH: 1
-OUTPUT_DIR: "output/keypoint_rcnn_hrnet_w18_1x_20210202"
+OUTPUT_DIR: "output/keypoint_rcnn_hrnet_w18_1x_20210202"  #_20210202

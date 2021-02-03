@@ -339,6 +339,7 @@ class COCODemo(object):
     def overlay_keypoints(self, image, predictions):
         keypoints = predictions.get_field("keypoints")
         kps = keypoints.keypoints
+        import ipdb;ipdb.set_trace()
         scores = keypoints.get_field("logits")
         kps = torch.cat((kps[:, :, 0:2], scores[:, :, None]), dim=2).numpy()
         for region in kps:
@@ -410,7 +411,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from maskrcnn_benchmark.structures.keypoint import PersonKeypoints
 
-def vis_keypoints(img, kps, kp_thresh=2, alpha=0.7):
+def vis_keypoints(img, kps, kp_thresh=0, alpha=0.7):
     """Visualizes keypoints (adapted from vis_one_image).
     kps has shape (4, #keypoints) where 4 rows are (x, y, logit, prob).
     """
