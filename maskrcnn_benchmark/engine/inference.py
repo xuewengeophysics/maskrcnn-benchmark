@@ -32,7 +32,7 @@ def compute_on_dataset(model, data_loader, device, bbox_aug, timer=None):
                     torch.cuda.synchronize()
                 timer.toc()
             output = [o.to(cpu_device) for o in output]
-            import ipdb;ipdb.set_trace()
+            # import ipdb;ipdb.set_trace()
         results_dict.update(
             {img_id: result for img_id, result in zip(image_ids, output)}
         )
@@ -83,7 +83,7 @@ def inference(
     inference_timer = Timer()
     total_timer.tic()
     predictions = compute_on_dataset(model, data_loader, device, bbox_aug, inference_timer)
-    import ipdb;ipdb.set_trace()
+    # import ipdb;ipdb.set_trace()
     # wait for all processes to complete before measuring the time
     synchronize()
     total_time = total_timer.toc()
