@@ -10,7 +10,7 @@ class HRFPN(nn.Module):
 
         config = cfg.MODEL.NECK
         self.pooling_type = config.POOLING
-        self.num_outs = config.NUM_OUTS  ##等于5，为什么呢？
+        self.num_outs = config.NUM_OUTS  ##等于5，为什么呢？与ResNet-FPN中的P5、P4、P3、P2对应(没有P1)
         self.in_channels = config.IN_CHANNELS  ##4个分支、4个channel，IN_CHANNELS:[18, 36, 72, 144]
         self.out_channels = config.OUT_CHANNELS  ##等于256
         self.num_ins = len(self.in_channels)  ##等于4
@@ -52,8 +52,15 @@ class HRFPN(nn.Module):
         out = self.reduction_conv(out)  ##用1x1卷积进行通道变换(270->256)
         outs = [out]
         for i in range(1, self.num_outs):  ##self.num_outs等于5
-            outs.append(self.pooling(out, kernel_size=2**i, stride=2**i))  ##用池化层生成特征金字塔的多层
+            outs.append(self.pooling(out, kernel_size=2**i, stride=2**i))  ##用池化层生成特征金字塔的多层，算上HRNet输出的那层，就是5层
         outputs = []
         for i in range(self.num_outs):
             outputs.append(self.fpn_conv[i](outs[i]))  ##用卷积层提取特征金字塔的各个层的特征
+        ##len(outputs)等于5，元素都是tensor
+        ##outputs[0].shape为torch.Size([1, 256, 248, 184])
+        ##outputs[1].shape为torch.Size([1, 256, 124,  92])
+        ##outputs[2].shape为torch.Size([1, 256,  62,  46])
+        ##outputs[3].shape为torch.Size([1, 256,  31,  23])
+        ##outputs[4].shape为torch.Size([1, 256,  15,  11])
+
         return tuple(outputs)

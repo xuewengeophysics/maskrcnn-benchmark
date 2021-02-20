@@ -271,7 +271,7 @@ class HRNet(nn.Module):
         self.transition3 = self._make_transition_layer(
             pre_stage_channels, num_channels)
         self.stage4, pre_stage_channels = self._make_stage(
-            self.stage4_cfg, num_channels, multi_scale_output=self.stage4_cfg.MULTI_OUTPUT)
+            self.stage4_cfg, num_channels, multi_scale_output=self.stage4_cfg.MULTI_OUTPUT)  ##_C.MODEL.HRNET.STAGE4.MULTI_OUTPUT = True
 
     def _make_transition_layer(
             self, num_channels_pre_layer, num_channels_cur_layer):
@@ -378,6 +378,11 @@ class HRNet(nn.Module):
                 x_list.append(self.transition3[i](y_list[-1]))
             else:
                 x_list.append(y_list[i])
-        y_list = self.stage4(x_list)
+        y_list = self.stage4(x_list)  ##多分支输出，因此len(y_list)等于4
+        ##len(y_list)等于4，元素都是tensor
+        ##y_list[0].shape为torch.Size([1,  18, 192, 336])
+        ##y_list[1].shape为torch.Size([1,  36,  96, 168])
+        ##y_list[2].shape为torch.Size([1,  72,  48,  84])
+        ##y_list[3].shape为torch.Size([1, 144,  24,  42])
 
         return tuple(y_list)
