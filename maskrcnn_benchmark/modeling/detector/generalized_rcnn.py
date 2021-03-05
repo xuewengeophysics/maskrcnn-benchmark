@@ -47,7 +47,7 @@ class GeneralizedRCNN(nn.Module):
             raise ValueError("In training mode, targets should be passed")
         images = to_image_list(images)
         features = self.backbone(images.tensors)
-        import ipdb;ipdb.set_trace()
+        # import ipdb;ipdb.set_trace()
         ##self.rpn为build_rpn中的RPNModule(cfg, in_channels)
         ##RPNModule返回boxes, losses
         proposals, proposal_losses = self.rpn(images, features, targets)

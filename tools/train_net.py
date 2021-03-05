@@ -37,6 +37,7 @@ except ImportError:
 
 def train(cfg, local_rank, distributed):
     model = build_detection_model(cfg)
+    # import ipdb;ipdb.set_trace()
     device = torch.device(cfg.MODEL.DEVICE)
     model.to(device)
 

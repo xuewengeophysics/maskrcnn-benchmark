@@ -169,7 +169,7 @@ class KeypointRCNNLossComputation(object):
 
         # import ipdb;ipdb.set_trace()
         # keypoint_loss = F.cross_entropy(keypoint_logits[valid], keypoint_targets[valid])
-        keypoint_loss = torch.mean((keypoint_logits[valid] - keypoint_targets[valid]) ** 2) * 40
+        keypoint_loss = torch.mean((keypoint_logits[valid] - keypoint_targets[valid]) ** 2) * 1000
         # import ipdb;ipdb.set_trace()
 
         return keypoint_loss

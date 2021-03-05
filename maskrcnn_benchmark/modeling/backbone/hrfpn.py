@@ -56,7 +56,7 @@ class HRFPN(nn.Module):
         outputs = []
         for i in range(self.num_outs):
             outputs.append(self.fpn_conv[i](outs[i]))  ##用卷积层提取特征金字塔的各个层的特征
-        ##len(outputs)等于5，元素都是tensor
+        ##len(outputs)等于5，元素都是tensor，是不是可以对应为P2、P3、P4、P5、P6
         ##outputs[0].shape为torch.Size([1, 256, 248, 184])
         ##outputs[1].shape为torch.Size([1, 256, 124,  92])
         ##outputs[2].shape为torch.Size([1, 256,  62,  46])
