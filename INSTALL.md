@@ -85,7 +85,7 @@ pip install ninja yacs cython matplotlib tqdm opencv-python
 # we give the instructions for CUDA 9.0
 ## Important : check the cuda version installed on your computer by running the command in the cmd :
 nvcc -- version
-conda install -c pytorch pytorch-nightly torchvision cudatoolkit=9.0
+conda install pytorch==1.4.0 torchvision==0.5.0 cudatoolkit=10.1 -c pytorch
 
 git clone https://github.com/cocodataset/cocoapi.git
 

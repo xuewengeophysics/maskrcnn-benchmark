@@ -32,7 +32,7 @@ def compute_on_dataset(model, data_loader, device, bbox_aug, timer=None):
                     torch.cuda.synchronize()
                 timer.toc()
             output = [o.to(cpu_device) for o in output]
-            # import ipdb;ipdb.set_trace()
+            import ipdb;ipdb.set_trace()
         results_dict.update(
             {img_id: result for img_id, result in zip(image_ids, output)}
         )

@@ -206,7 +206,7 @@ class COCODemo(object):
                 of the detection properties can be found in the fields of
                 the BoxList via `prediction.fields()`
         """
-        predictions = self.compute_prediction(image)
+        predictions = self.compute_prediction(image)  ##type(predictions)为<class 'maskrcnn_benchmark.structures.bounding_box.BoxList'>
         top_predictions = self.select_top_predictions(predictions)
 
         result = image.copy()
@@ -248,6 +248,7 @@ class COCODemo(object):
         # reshape prediction (a BoxList) into the original image size
         height, width = original_image.shape[:-1]
         prediction = prediction.resize((width, height))
+        import ipdb;ipdb.set_trace()
 
         if prediction.has_field("mask"):
             # if we have masks, paste the masks in the right position
