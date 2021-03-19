@@ -79,7 +79,7 @@ def heatmaps_to_keypoints(maps, rois):
         roi_map = np.transpose(roi_map, [2, 0, 1])
         # roi_map_probs = scores_to_probs(roi_map.copy())
         w = roi_map.shape[2]
-        pos = roi_map.reshape(num_keypoints, -1).argmax(axis=1)
+        pos = roi_map.reshape(num_keypoints, -1).argmax(axis=1)  ##根据heatmap的最大值求x, y的坐标，此处根据MSRA、DARK、UDP的方法进行修改
         x_int = pos % w
         y_int = (pos - x_int) // w
         # assert (roi_map_probs[k, y_int, x_int] ==
